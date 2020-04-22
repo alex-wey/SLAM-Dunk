@@ -1,5 +1,5 @@
 import numpy as np 
-
+import triangulate
 #Input: 3D points (n,3) of frame k and k+1
 #Output: Transformation matrix Tk (Ck = C(k-1)*Tk)
 #C (4,4) and T (4,4) both tranformation matrices
@@ -32,6 +32,40 @@ def updateCameraPose(coord1, coord2, C):
     #update Camera Transformation with new T
     return T@C
 
+
+# Input: 'matches_a' is nx2 matrix of 2D coordinate of points on Image A
+#        'matches_b' is nx2 matrix of 2D coordinate of points on Image B
+def ransac_fundamental_matrix(matches_a, matches_b):
+    p = 0.99
+    e = 0.6
+    s = 8
+    N = int(np.log(1-p) / (np.log(1-np.power(1-e, s))))
+    n = matches_a.shape[0]
+    sigma = 0.02
+    F_best = np.zeros((3,3))
+    D = np.zeros(n)
+    max_inliers = 0
+    
+    a_append = np.append(matches_a, np.ones((n, 1)), axis=1)
+    b_append = np.append(matches_b, np.ones((n, 1)), axis=1)
+
+    for i in range(N):
+        samples = np.random.choice(n, s)
+        sample_a = matches_a[samples]
+        sample_b = matches_b[samples]
+        F_est = triangulate.calculateFMatrix(sample_a, sample_b)
+        D = np.absolute(np.sum(np.multiply((a_append @ F_est),  b_append), axis = 1))
+        inliers = np.sum(D < sigma)
+        if (inliers > max_inliers):
+            F_best = F_est
+            max_inliers = inliers
+
+    D = np.absolute(np.sum(np.multiply((a_append @ F_best),  b_append), axis = 1))
+    inliers_a = matches_a[D < sigma]
+    inliers_b = matches_b[D < sigma]
+    print("RANSAC Inliers:")
+    print(max_inliers)
+    return F_best, inliers_a, inliers_b
 
 def main():
     #test main

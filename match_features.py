@@ -28,15 +28,15 @@ def matchFeatures():
     counter = 0
     for left, right in matches:
         if left.distance < (right.distance * 0.7) : 
-            point1 = sift.detectAndCompute(gray_img1, None)[0][left.queryIdx].pt
-            point2 = sift.detectAndCompute(gray_img2, None)[0][right.trainIdx].pt
-            left_matches.append(point1)
-            right_matches.append(point2)
+            pointl1, pointr1 = sift.detectAndCompute(gray_img1, None)[0][left.queryIdx].pt
+            pointl2, pointr2 = sift.detectAndCompute(gray_img2, None)[0][right.trainIdx].pt
+            np.append(left_matches, [pointl1, pointr1])
+            np.append(right_matches, [pointl2, pointr2])
 
             
-
-    print(len(left_matches))
-    print(len(right_matches))
+# 682 points 
+    print(left_matches)
+    print(right_matches.shape)
  
 
 

@@ -40,7 +40,7 @@ def update_camera_pose(coord1, coord2, C):
 #        'matches_b' is nx2 matrix of 2D coordinate of points on Image B
 def ransac_F_Matrix(matches_a, matches_b):
 
-    print('Calculating RANSAC fundamental ...')
+    print('Calculating RANSAC fundamental...')
 
     p = 0.99
     e = 0.6

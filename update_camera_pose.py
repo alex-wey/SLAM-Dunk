@@ -3,7 +3,10 @@ import triangulate
 #Input: 3D points (n,3) of frame k and k+1
 #Output: Transformation matrix Tk (Ck = C(k-1)*Tk)
 #C (4,4) and T (4,4) both tranformation matrices
-def updateCameraPose(coord1, coord2, C):
+def update_camera_pose(coord1, coord2, C):
+
+    print('Updating camera pose...')
+
     R = np.zeros((3,3))
     t = np.zeros((3,1))
     T = np.zeros((4,4))
@@ -35,7 +38,10 @@ def updateCameraPose(coord1, coord2, C):
 
 # Input: 'matches_a' is nx2 matrix of 2D coordinate of points on Image A
 #        'matches_b' is nx2 matrix of 2D coordinate of points on Image B
-def ransac_fundamental_matrix(matches_a, matches_b):
+def ransac_F_Matrix(matches_a, matches_b):
+
+    print('Calculating RANSAC fundamental ...')
+
     p = 0.99
     e = 0.6
     s = 8
@@ -53,7 +59,7 @@ def ransac_fundamental_matrix(matches_a, matches_b):
         samples = np.random.choice(n, s)
         sample_a = matches_a[samples]
         sample_b = matches_b[samples]
-        F_est = triangulate.calculateFMatrix(sample_a, sample_b)
+        F_est = triangulate.calculate_F_Matrix(sample_a, sample_b)
         D = np.absolute(np.sum(np.multiply((a_append @ F_est),  b_append), axis = 1))
         inliers = np.sum(D < sigma)
         if (inliers > max_inliers):
@@ -72,7 +78,7 @@ def main():
     C = np.diag(np.ones(4))
     coord1 = np.array([[3,4,6],[1,6,8],[2,4,8]])
     coord2 = np.array([[3.3,4.1,6.1],[1.29,6,8.1],[2.31,4.1,8]])
-    C = updateCameraPose(coord1, coord2, C)
+    C = update_camera_pose(coord1, coord2, C)
     # thetax = np.arctan2(C[2,1], C[2,2])
     # thetay = np.arctan2(-C[2,0], np.sqrt(np.square(C[2,1])+ np.square(C[2,2])))
     # thetaz = np.arctan2(C[1,0], C[0,0])

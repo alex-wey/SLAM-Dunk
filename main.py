@@ -8,12 +8,13 @@ import argparse
 from skimage import io 
 from scipy import misc
 from matplotlib import pyplot as plt
-from update_camera_pose import updateCameraPose
+from update_camera_pose import update_camera_pose
+from update_camera_pose import ransac_F_Matrix
 from triangulate import triangulate
-from match_features import matchFeatures
+from match_features import match_features
 
 # initial camera pose
-C = [1,1,1]
+C = np.diag(np.ones(4))
 
 def main():
 	# load images, which are stored in a folder named 'rectified' in the same directory as this file
@@ -35,13 +36,16 @@ def main():
 		plt.show()
 		'''
 		# frame1
-		matchesl1, matchesr1 = matchFeatures(imgl1, imgr1)
-		matchesl1, matchesr1 = RANSAC(matchesl1, matchesr1)
+		matchesl1, matchesr1 = match_features(imgl1, imgr1)
+		matchesl1, matchesr1 = ransac_F_Matrix(matchesl1, matchesr1)
 		coords3d1 = triangulate(matchesl1, matchesr1)
 		# frame2
-		matchesl2, matchesr2 = matchFeatures(imgl2, imgr2)
-		matchesl2, matchesr2 = RANSAC(matchesl2, matchesr2)
+		matchesl2, matchesr2 = match_features(imgl2, imgr2)
+		matchesl2, matchesr2 = ransac_F_Matrix(matchesl2, matchesr2)
 		coords3d2 = triangulate(matchesl2, matchesr2)
-		updateCameraPose(coords3d1, coords3d2)
+		
+		update_camera_pose(coords3d1, coords3d2, C)
+
+		print(C)
 
 main()

@@ -13,17 +13,23 @@ from update_camera_pose import ransac_F_Matrix
 from triangulate import triangulate
 from match_features import match_features
 
-# initial camera pose
-C = np.diag(np.ones(4))
+
 
 def main():
 	# load images, which are stored in a folder named 'rectified' in the same directory as this file
 	data_dir = os.path.dirname(os.path.abspath(__file__))
 	ic = io.collection.ImageCollection(data_dir+'/rectified/*.png')
 	half_idx = len(ic)//2
-	left_ic = ic[:half_idx]
-	right_ic = ic[half_idx:]
+	#load a few frames for testing
+	left_ic = ic[0:50]
+	right_ic = ic[half_idx:half_idx+50]
+	ic = None
+	# left_ic = ic[:half_idx]
+	# right_ic = ic[half_idx:]
 	# images have shape (480, 640, 3)
+
+	# initial camera pose
+	C = np.diag(np.ones(4))
 	for i in range(len(left_ic)-1):
 		imgl1 = left_ic[i]
 		imgr1 = right_ic[i]
@@ -44,7 +50,7 @@ def main():
 		F2, inliers_a2, inliers_b2 = ransac_F_Matrix(matchesl2, matchesr2)
 		coords3d2 = triangulate(inliers_a2, inliers_b2)
 		
-		update_camera_pose(coords3d1, coords3d2, C)
+		C = update_camera_pose(coords3d1, coords3d2, C)
 
 		print(C)
 

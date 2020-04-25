@@ -5,57 +5,58 @@ from skimage.color import rgb2gray
 
 #Input: two images
 #Output: two (n, 2) matrix matches
-def match_features(img1, img2):
 
-    print('Matching features...')
+    # 3D-2D match features
+#     1) Capture two stereo image pairs Il;k-1, Ir;k-1 and Il;k, Ir;k
+#     2) Extract and match features between Il;k-1 and Il;k
+#     3) Triangulate matched features for each stereo pair
+#     4) Compute Tk from 3-D features Xk1 and Xk
+#     5) Concatenate transformation by computing Ck ¼ Ck1Tk
+#     6) Repeat from 1).
 
-    ratio = 0.5
+def match_features2(imgl, imgr, imgln, imgrn):
+    #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
 
-    gray_img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-    gray_img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+    gray_imgl = cv2.cvtColor(imgl, cv2.COLOR_BGR2GRAY)
+    gray_imgr = cv2.cvtColor(imgr, cv2.COLOR_BGR2GRAY)
+    gray_imgln = cv2.cvtColor(imgln, cv2.COLOR_BGR2GRAY)
+    gray_imgrn = cv2.cvtColor(imgrn, cv2.COLOR_BGR2GRAY)
 
     sift = cv2.xfeatures2d.SIFT_create()
 
-    # bf = cv2.BFMatcher()
-    # matches = bf.knnMatch(sift.detectAndCompute(gray_img1, None)[1], 
-    # sift.detectAndCompute(gray_img2, None)[1], k=2)
-    
+    k1, d1 = sift.detectAndCompute(gray_imgl, None)
+    k2, d2 = sift.detectAndCompute(gray_imgr, None)
+    k1n, d1n = sift.detectAndCompute(gray_imgln, None)
+    k2n, d2n = sift.detectAndCompute(gray_imgrn, None)
+
 
     bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
-    matches = bf.match(sift.detectAndCompute(gray_img1, None)[1], 
-    sift.detectAndCompute(gray_img2, None)[1])
+
+    #matches between imgl and imgln
+    matches = bf.match(d1,d1n)
+    #matches between imgr and imgr1
+    matches2 = bf.match(d2, d2n)
 
 
     matches = sorted(matches, key=lambda x: x.distance)
     new_matches = matches[:50]
 
+    matches2 = sorted(matches2, key=lambda x: x.distance)
+    new_matches2 = matches2[:50]
+    
+    #get the same matches
+    same = new_matches & new_matches2
+    
+    #get the xy coordinate of the matches
     left_matches = []
     right_matches = []
-    for matches in new_matches:
-        pointl1, pointr1 = sift.detectAndCompute(gray_img1, None)[0][new_matches[0].queryIdx].pt
-        pointl2, pointr2 = sift.detectAndCompute(gray_img2, None)[0][new_matches[1].trainIdx].pt
-
-        left_matches.append([pointl1, pointr1])
-        right_matches.append([pointl2, pointr2])
-
-    # counter = 0
-    # for left, right in matches:
-    #     if left.distance < (right.distance * 0.7) : 
-    #         matchl = np.zeros((1,2))
-    #         matchr = np.zeros((1,2))
-    #         pointl1, pointr1 = sift.detectAndCompute(gray_img1, None)[0][left.queryIdx].pt
-    #         pointl2, pointr2 = sift.detectAndCompute(gray_img2, None)[0][right.trainIdx].pt
-    #         matchl = [pointl1, pointr1]
-    #         matchr = [pointl2, pointr2]
-    #         left_matches.append(matchl)
-    #         right_matches.append(matchr)
-    #         counter += 1
+    for match in same:
+        x1, y1 = k1[same[0].queryIdx].pt
+        x2, y2 = k1n[same[1].trainIdx].pt
+        left_matches.append([x1, y1])
+        right_matches.append([x2, y2])
     
-    lmatches = np.array(left_matches)
-    rmatches = np.array(right_matches)
+    lmatch = np.array(left_matches)
+    rmatch = np.array(right_matches)
 
-    print(lmatches.shape)
-
-    return lmatches, rmatches
-
-
+    return lmatch, rmatch

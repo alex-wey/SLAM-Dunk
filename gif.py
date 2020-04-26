@@ -10,6 +10,9 @@ from mpl_toolkits.mplot3d import Axes3D  # Not used but needed to make 3D plots
 # Output: 3D representation of a camera's path as gif
 def gif(matrix):
 
+    if not os.path.isdir('poses'):
+        os.mkdir('poses')
+
     gif_coords = np.zeros((matrix.shape[0], matrix.shape[1]))
 
     for i, coords in enumerate(matrix):

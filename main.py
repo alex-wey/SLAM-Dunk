@@ -4,14 +4,14 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 import numpy as np
 import os
 import cv2
-import argparse
 from skimage import io 
-from scipy import misc
-from matplotlib import pyplot as plt
 from update_camera_pose import update_camera_pose
 from update_camera_pose import ransac_F_Matrix
 from triangulate import triangulate
 from match_features import match_features
+
+# camera poses array
+plot_C = np.zeros((6000, 3))
 
 # initial camera pose
 C = np.diag(np.ones(4))
@@ -44,7 +44,7 @@ def main():
 		F2, inliers_a2, inliers_b2 = ransac_F_Matrix(matchesl2, matchesr2)
 		coords3d2 = triangulate(inliers_a2, inliers_b2)
 		
-		update_camera_pose(coords3d1, coords3d2, C)
+		C = update_camera_pose(coords3d1, coords3d2, C)
 
 		print(C)
 

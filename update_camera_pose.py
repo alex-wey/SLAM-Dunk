@@ -1,7 +1,7 @@
 import numpy as np 
 import triangulate
-#Input: 3D points (n,3) of frame k and k+1
-#Output: Transformation matrix Tk (Ck = C(k-1)*Tk)
+# Input: 3D points (n,3) of frame k and k+1
+# Output: Transformation matrix Tk (Ck = C(k-1)*Tk)
 #C (4,4) and T (4,4) both tranformation matrices
 def update_camera_pose(coord1, coord2, C):
 

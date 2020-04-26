@@ -53,14 +53,14 @@ def match_features(imgl, imgr, imgln, imgrn):
     left_matchesn =[]
     right_matchesn = []
     for match in new_matches:
-        x1, y1 = k1[match[0].queryIdx].pt
-        x2, y2 = k1n[match[1].trainIdx].pt
+        x1, y1 = k1[match.queryIdx].pt
+        x2, y2 = k1n[match.trainIdx].pt
         left_matches.append([x1, y1])
         left_matchesn.append([x2, y2])
 
     for match2 in new_matches2:
-        x1n, y1n = k2[match2[0].queryIdx].pt
-        x2n, y2n = k2n[match2[1].trainIdx].pt
+        x1n, y1n = k2[match2.queryIdx].pt
+        x2n, y2n = k2n[match2.trainIdx].pt
         right_matches.append([x1n, y1n])
         right_matchesn.append([x2n,y2n])
 

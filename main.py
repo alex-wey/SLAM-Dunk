@@ -42,13 +42,13 @@ def main():
 		plt.show()
 		'''
 		# frame1
-		matchesl1, matchesr1 = match_features(imgl1, imgr1)
+		matchesl1, matchesr1 = match_features(imgl1, imgr1, imgl2, imgr2 )
 		F1, inliers_a1, inliers_b1 = ransac_F_Matrix(matchesl1, matchesr1)
 		coords3d1 = triangulate(inliers_a1, inliers_b1)
 		# frame2
-		matchesl2, matchesr2 = match_features(imgl2, imgr2)
-		F2, inliers_a2, inliers_b2 = ransac_F_Matrix(matchesl2, matchesr2)
-		coords3d2 = triangulate(inliers_a2, inliers_b2)
+		# matchesl2, matchesr2 = match_features(imgl2, imgr2)
+		# F2, inliers_a2, inliers_b2 = ransac_F_Matrix(matchesl2, matchesr2)
+		# coords3d2 = triangulate(inliers_a2, inliers_b2)
 		
 		C = update_camera_pose(coords3d1, coords3d2, C)
 

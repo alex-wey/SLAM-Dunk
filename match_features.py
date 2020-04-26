@@ -55,13 +55,15 @@ def match_features(imgl, imgr, imgln, imgrn):
     for match in new_matches:
         x1, y1 = k1[new_matches[0].queryIdx].pt
         x2, y2 = k1n[new_matches[1].trainIdx].pt
-        for match2 in new_matches2:
-            x1n, y1n = k2[new_matches2[0].queryIdx].pt
-            x2n, y2n = k2n[new_matches2[1].trainIdx].pt
-            right_matches.append([x1n, y1n])
-            right_matchesn.append([x2n,y2n])
         left_matches.append([x1, y1])
         left_matchesn.append([x2, y2])
+        
+    for match2 in new_matches2:
+        x1n, y1n = k2[new_matches2[0].queryIdx].pt
+        x2n, y2n = k2n[new_matches2[1].trainIdx].pt
+        right_matches.append([x1n, y1n])
+        right_matchesn.append([x2n,y2n])
+
     
     # lmatch = xy in k-1 left, lmatchn = xy in k left, 
     # rmatch = xy in k-1 right, rmatchn = xy in k right

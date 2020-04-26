@@ -25,8 +25,7 @@ def update_camera_pose(coord1, coord2, C):
         R = X
     else:
         print("R calculation faliure")
-        print(detX)
-        return
+        return C
     t = np.transpose(p2) - R @ np.transpose(p1)
     T[0:3, 0:3] = R
     T[0:3,3] = t
@@ -84,8 +83,7 @@ def ransac_F_Matrix(matches_a, matches_b, matches_an, matches_bn):
     inliers_b1 = matches_b[np.logical_and(D1 < sigma,D2 < sigma)]
     inliers_a2 = matches_an[np.logical_and(D1 < sigma,D2 < sigma)]
     inliers_b2 = matches_bn[np.logical_and(D1 < sigma,D2 < sigma)]
-    print("RANSAC Inliers:")
-    print(max_inliers)
+    print("RANSAC Inliers:", max_inliers)
     return F_best, inliers_a1, inliers_b1, inliers_a2, inliers_b2
 
 def main():

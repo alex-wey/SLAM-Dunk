@@ -4,6 +4,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 import numpy as np
 import os
 import cv2
+import csv
 from skimage import io 
 from update_camera_pose import update_camera_pose
 from update_camera_pose import ransac_F_Matrix
@@ -29,10 +30,12 @@ def main():
 	# left_ic = ic[:half_idx]
 	# right_ic = ic[half_idx:]
 	# images have shape (480, 640, 3)
-
+	csv_file = open("points.csv", mode='w')
+	csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	# initial camera pose
 	C = np.diag(np.ones(4))
 	for i in range(len(left_ic)-1):
+		print("Iteration ", i, "/", len(left_ic)-1)
 		imgl1 = left_ic[i]
 		imgr1 = right_ic[i]
 		imgl2 = left_ic[i+1]
@@ -59,6 +62,8 @@ def main():
 		C = update_camera_pose(coords3d1, coords3d2, C)
 
 		plot_C[i] = C[0:3,3].T
+		csv_writer.writerow(plot_C[i])
+		print("")
 
 	gif(plot_C[0:50])
 

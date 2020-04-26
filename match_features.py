@@ -16,7 +16,7 @@ from skimage.color import rgb2gray
 
 def match_features(imgl, imgr, imgln, imgrn):
     #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
-
+    print("Matching Features...")
     gray_imgl = cv2.cvtColor(imgl, cv2.COLOR_BGR2GRAY)
     gray_imgr = cv2.cvtColor(imgr, cv2.COLOR_BGR2GRAY)
     gray_imgln = cv2.cvtColor(imgln, cv2.COLOR_BGR2GRAY)

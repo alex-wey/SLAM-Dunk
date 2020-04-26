@@ -12,7 +12,7 @@ from match_features import match_features
 from gif import gif
 
 # camera poses array
-plot_C = np.zeros((6000, 3))
+plot_C = np.zeros((6509, 3))
 
 # initial camera pose
 C = np.diag(np.ones(4))
@@ -44,21 +44,23 @@ def main():
 		plt.show()
 		'''
 		matchesl1, matchesr1, matchesl2, matchesr2 = match_features(imgl1, imgr1, imgl2, imgr2)
+		F, inliers_a1, inliers_b1, inliers_a2, inliers_b2,  = ransac_F_Matrix(matchesl1, matchesr1,matchesl2, matchesr2)
 
 		# frame1
 		# F1, inliers_a1, inliers_b1 = ransac_F_Matrix(matchesl1, matchesr1)
-		# coords3d1 = triangulate(inliers_a1, inliers_b1)
-		coords3d1 = triangulate(matchesl1, matchesr1)
+		coords3d1 = triangulate(inliers_a1, inliers_b1)
+		#coords3d1 = triangulate(matchesl1, matchesr1)
 		
 		# frame2
 		# F2, inliers_a2, inliers_b2 = ransac_F_Matrix(matchesl2, matchesr2)
-		# coords3d2 = triangulate(inliers_a2, inliers_b2)
-		coords3d2 = triangulate(matchesl2, matchesr2)
+		coords3d2 = triangulate(inliers_a2, inliers_b2)
+		#coords3d2 = triangulate(matchesl2, matchesr2)
 		
 		C = update_camera_pose(coords3d1, coords3d2, C)
+
 		plot_C[i] = C[0:3,3].T
 
-	gif(plot_C[0:200])
+	gif(plot_C[0:50])
 
 
 main()

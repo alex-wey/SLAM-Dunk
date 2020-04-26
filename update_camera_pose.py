@@ -38,7 +38,7 @@ def update_camera_pose(coord1, coord2, C):
 
 # Input: 'matches_a' is nx2 matrix of 2D coordinate of points on Image A
 #        'matches_b' is nx2 matrix of 2D coordinate of points on Image B
-def ransac_F_Matrix(matches_a, matches_b):
+def ransac_F_Matrix(matches_a, matches_b, matches_an, matches_bn):
 
     print('Implementing RANSAC...')
 
@@ -47,31 +47,46 @@ def ransac_F_Matrix(matches_a, matches_b):
     s = 8
     N = int(np.log(1-p) / (np.log(1-np.power(1-e, s))))
     n = matches_a.shape[0]
-    sigma = 0.02
+    #sigma = 0.02
+    sigma = 0.04
     F_best = np.zeros((3,3))
     D = np.zeros(n)
     max_inliers = 0
     
     a_append = np.append(matches_a, np.ones((n, 1)), axis=1)
     b_append = np.append(matches_b, np.ones((n, 1)), axis=1)
+    an_append = np.append(matches_an, np.ones((n, 1)), axis=1)
+    bn_append = np.append(matches_bn, np.ones((n, 1)), axis=1)
+
 
     for i in range(N):
         samples = np.random.choice(n, s)
         sample_a = matches_a[samples]
         sample_b = matches_b[samples]
-        F_est = triangulate.calculate_F_Matrix(sample_a, sample_b)
-        D = np.absolute(np.sum(np.multiply((a_append @ F_est),  b_append), axis = 1))
-        inliers = np.sum(D < sigma)
-        if (inliers > max_inliers):
-            F_best = F_est
-            max_inliers = inliers
+        sample_an = matches_an[samples]
+        sample_bn = matches_bn[samples]
+        F_est1 = triangulate.calculate_F_Matrix(sample_a, sample_b)
+        F_est2 = triangulate.calculate_F_Matrix(sample_an, sample_bn)
+        D1 = np.absolute(np.sum(np.multiply((a_append @ F_est1),  b_append), axis = 1))
+        inliers1 = np.sum(D1 < sigma)
+        D2 = np.absolute(np.sum(np.multiply((an_append @ F_est2),  bn_append), axis = 1))
+        inliers2 = np.sum(D2 < sigma)
+        if (inliers1 > max_inliers):
+            F_best = F_est1
+            max_inliers = inliers1
+        if (inliers2 > max_inliers):
+            F_best = F_est2
+            max_inliers = inliers2
 
-    D = np.absolute(np.sum(np.multiply((a_append @ F_best),  b_append), axis = 1))
-    inliers_a = matches_a[D < sigma]
-    inliers_b = matches_b[D < sigma]
+    D1 = np.absolute(np.sum(np.multiply((a_append @ F_best),  b_append), axis = 1))
+    D2 = np.absolute(np.sum(np.multiply((an_append @ F_best),  bn_append), axis = 1))
+    inliers_a1 = matches_a[np.logical_and(D1 < sigma,D2 < sigma)]
+    inliers_b1 = matches_b[np.logical_and(D1 < sigma,D2 < sigma)]
+    inliers_a2 = matches_an[np.logical_and(D1 < sigma,D2 < sigma)]
+    inliers_b2 = matches_bn[np.logical_and(D1 < sigma,D2 < sigma)]
     print("RANSAC Inliers:")
     print(max_inliers)
-    return F_best, inliers_a, inliers_b
+    return F_best, inliers_a1, inliers_b1, inliers_a2, inliers_b2
 
 def main():
     #test main

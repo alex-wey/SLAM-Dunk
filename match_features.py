@@ -45,18 +45,29 @@ def match_features2(imgl, imgr, imgln, imgrn):
     new_matches2 = matches2[:50]
     
     #get the same matches
-    same = new_matches & new_matches2
+    # same = new_matches & new_matches2
     
     #get the xy coordinate of the matches
     left_matches = []
     right_matches = []
-    for match in same:
-        x1, y1 = k1[same[0].queryIdx].pt
-        x2, y2 = k1n[same[1].trainIdx].pt
+    left_matchesn =[]
+    right_matchesn = []
+    for match in new_matches:
+        x1, y1 = k1[new_matches[0].queryIdx].pt
+        x2, y2 = k1n[new_matches[1].trainIdx].pt
+        for match2 in new_matches2:
+            x1n, y1n = k2[new_matches2[0].queryIdx].pt
+            x2n, y2n = k2n[new_matches2[1].trainIdx].pt
+            right_matches.append([x1n, y1n])
+            right_matchesn.append([x2n,y2n])
         left_matches.append([x1, y1])
-        right_matches.append([x2, y2])
+        left_matchesn.append([x2, y2])
     
+    # lmatch = xy in k-1 left, lmatchn = xy in k left, 
+    # rmatch = xy in k-1 right, rmatchn = xy in k right
     lmatch = np.array(left_matches)
+    lmatchn = np.array(left_matchesn)
     rmatch = np.array(right_matches)
+    rmatchn = np.array(right_matchesn)
 
-    return lmatch, rmatch
+    return lmatch, rmatch, lmatchn, rmatchn

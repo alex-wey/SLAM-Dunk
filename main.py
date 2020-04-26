@@ -42,7 +42,7 @@ def main():
 		plt.show()
 		'''
 		# frame1
-		matchesl1, matchesr1 = match_features(imgl1, imgr1, imgl2, imgr2 )
+		matchesl1, matchesr1 = match_features(imgl1, imgr1, imgl2, imgr2)
 		F1, inliers_a1, inliers_b1 = ransac_F_Matrix(matchesl1, matchesr1)
 		coords3d1 = triangulate(inliers_a1, inliers_b1)
 		# frame2

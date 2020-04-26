@@ -14,7 +14,7 @@ from skimage.color import rgb2gray
 #     5) Concatenate transformation by computing Ck ¼ Ck1Tk
 #     6) Repeat from 1).
 
-def match_features2(imgl, imgr, imgln, imgrn):
+def match_features(imgl, imgr, imgln, imgrn):
     #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
 
     gray_imgl = cv2.cvtColor(imgl, cv2.COLOR_BGR2GRAY)

@@ -20,8 +20,8 @@ def gif(matrix):
     ax.set_ylim3d(np.min(matrix[:,1])-10, np.max(matrix[:,1])+10)
     ax.set_zlim3d(np.min(matrix[:,2])-10, np.max(matrix[:,2])+10)
     ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_zlabel('z')
+    ax.set_ylabel('z')
+    ax.set_zlabel('y')
 
     for i, coords in enumerate(matrix):
 

@@ -5,15 +5,6 @@ from skimage.color import rgb2gray
 
 #Input: two images
 #Output: two (n, 2) matrix matches
-
-    # 3D-2D match features
-#     1) Capture two stereo image pairs Il;k-1, Ir;k-1 and Il;k, Ir;k
-#     2) Extract and match features between Il;k-1 and Il;k
-#     3) Triangulate matched features for each stereo pair
-#     4) Compute Tk from 3-D features Xk1 and Xk
-#     5) Concatenate transformation by computing Ck ¼ Ck1Tk
-#     6) Repeat from 1).
-
 def match_features(imgl, imgr, imgln, imgrn):
     #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
     print("Matching Features...")

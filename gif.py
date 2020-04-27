@@ -30,22 +30,9 @@ def gif(matrix):
         y = gif_coords[0:i+1,1]
         z = gif_coords[0:i+1,2]
         
-        ax.scatter(x, y, z)
+        ax.scatter(x, y, z, c='#d62728')
         plt.savefig('poses/camera_pose_' + str(i) + '.png')
 
     image_dir = os.path.dirname(os.path.abspath(__file__))
     images = io.collection.ImageCollection(image_dir + '/poses/*.png')
     imageio.mimsave('SLAM.gif', images, duration=1/8)
-
-def main():
-
-    # coords = np.zeros((30, 3))
-    # c = np.array([1, 2, 3])
-    # for i in range(30):
-    #     coords[i] = c
-    #     c = np.add(c, 1)
-
-    gif(coords)
-
-if __name__ == '__main__':
-    main()

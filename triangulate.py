@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 # baseline
 b = 0.120006
@@ -34,6 +35,8 @@ def calculate_F_Matrix(Points_a,Points_b):
     std_b = np.std(Points_b - np.array([c_u_b, c_v_b]))
     s_a = np.reciprocal(std_a)
     s_b = np.reciprocal(std_b)
+    if math.isnan(s_a) or math.isnan(s_b):
+        raise Exception('NaN')
 
     scale_a = np.array([[s_a, 0, 0],
                         [0, s_a, 0],
@@ -102,6 +105,20 @@ def triangulate(Points_a, Points_b):
         X = xl * Z/f
         Y = yl * Z/f
 
-        world_points[i] = np.array([X, Y, Z])
+        world_points[i] = np.array([X, Z, Y])
 
     return world_points
+
+
+def main():
+    xl = 249
+    yl = 153
+    xr = 257
+
+    Z = (b * f)/abs(xl - xr)
+    X = xl * Z/f
+    Y = yl * Z/f
+
+    print(X, Y, Z)
+
+main()

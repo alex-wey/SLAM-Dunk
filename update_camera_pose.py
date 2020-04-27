@@ -64,8 +64,12 @@ def ransac_F_Matrix(matches_a, matches_b, matches_an, matches_bn):
         sample_b = matches_b[samples]
         sample_an = matches_an[samples]
         sample_bn = matches_bn[samples]
-        F_est1 = triangulate.calculate_F_Matrix(sample_a, sample_b)
-        F_est2 = triangulate.calculate_F_Matrix(sample_an, sample_bn)
+        try:
+            F_est1 = triangulate.calculate_F_Matrix(sample_a, sample_b)
+            F_est2 = triangulate.calculate_F_Matrix(sample_an, sample_bn)
+        except Exception as e:
+            print("error in calculating F_matrix:",e)
+            continue
         D1 = np.absolute(np.sum(np.multiply((a_append @ F_est1),  b_append), axis = 1))
         inliers1 = np.sum(D1 < sigma)
         D2 = np.absolute(np.sum(np.multiply((an_append @ F_est2),  bn_append), axis = 1))

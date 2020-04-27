@@ -94,13 +94,13 @@ def triangulate(Points_a, Points_b):
     world_points = np.zeros((num_Points, 3))
 
     for i in range(num_Points):
-        x1 = Points_a[i, 0]
-        y1 = Points_a[i, 1]
-        x2 = Points_b[i, 0]
+        xl = Points_a[i, 0]
+        yl = Points_a[i, 1]
+        xr = Points_b[i, 0]
 
-        Z = (b * f)/(x1 - x2)
-        X = x1 * Z/f
-        Y = y1 * Z/f
+        Z = (b * f)/abs(xl - xr)
+        X = xl * Z/f
+        Y = yl * Z/f
 
         world_points[i] = np.array([X, Y, Z])
 

@@ -33,16 +33,21 @@ def match_features(imgl, imgr, imgln, imgrn):
     bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
 
     #matches between imgl and imgln
-    matches = bf.match(d1,d1n)
-    #matches between imgr and imgr1
-    matches2 = bf.match(d2, d2n)
+    matches1n = bf.match(d1,d1n)
+    #matches between imgl and imgr
+    matches2 = bf.match(d1,d2)
+    #matches between imgl and imgrn
+    matches2n = bf.match(d1,d2n)
 
 
-    matches = sorted(matches, key=lambda x: x.distance)
-    new_matches = matches[:50]
+    matches1n = sorted(matches1n, key=lambda x: x.distance)
+    matches1n = matches1n[:50]
 
     matches2 = sorted(matches2, key=lambda x: x.distance)
-    new_matches2 = matches2[:50]
+    matches2 = matches2[:50]
+
+    matches2n = sorted(matches2n, key=lambda x: x.distance)
+    matches2n = matches2n[:50]
     
     #get the same matches
     # same = new_matches & new_matches2
@@ -52,17 +57,35 @@ def match_features(imgl, imgr, imgln, imgrn):
     right_matches = []
     left_matchesn =[]
     right_matchesn = []
-    for match in new_matches:
+    for match in matches1n:
         x1, y1 = k1[match.queryIdx].pt
-        x2, y2 = k1n[match.trainIdx].pt
-        left_matches.append([x1, y1])
-        left_matchesn.append([x2, y2])
+        x1n, y1n = k1n[match.trainIdx].pt
 
-    for match2 in new_matches2:
-        x1n, y1n = k2[match2.queryIdx].pt
-        x2n, y2n = k2n[match2.trainIdx].pt
-        right_matches.append([x1n, y1n])
-        right_matchesn.append([x2n,y2n])
+
+        for match2 in matches2:
+            if (match2.queryIdx == match.queryIdx):
+                x2, y2 = k2[match2.trainIdx].pt
+                for match2n in matches2n:
+                    if (match2n.queryIdx == match.queryIdx):
+                        x2n, y2n = k2n[match2n.trainIdx].pt
+                        left_matches.append([x1, y1])
+                        left_matchesn.append([x1n, y1n])
+                        right_matches.append([x2, y2])
+                        right_matchesn.append([x2n, y2n])
+                        break
+                break                  
+        continue
+
+
+                
+    
+
+
+    # for match2 in new_matches2:
+    #     x1n, y1n = k2[match2.queryIdx].pt
+    #     x2n, y2n = k2n[match2.trainIdx].pt
+    #     right_matches.append([x1n, y1n])
+    #     right_matchesn.append([x2n,y2n])
 
     
     # lmatch = xy in k-1 left, lmatchn = xy in k left, 

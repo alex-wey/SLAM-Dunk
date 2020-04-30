@@ -62,8 +62,9 @@ def main():
 		C_new = update_camera_pose(coords3d1, coords3d2, C)
 		rejection_threshold = 0.5 #meters
 		if(np.linalg.norm(C_new[0:3,3]-C[0:3,3]) < rejection_threshold):
-			print("New pose rejected")
 			C = C_new
+		else:
+			print("New pose rejected")
 		
 		plot_C[i] = C[0:3,3].T
 		csv_writer.writerow(plot_C[i])

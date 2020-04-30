@@ -88,14 +88,6 @@ def match_features(imgl, imgr, imgln, imgrn):
     rmatch = np.array(right_matches)
     rmatchn = np.array(right_matchesn)
 
-    checkimg1 = cv2.drawMatches(gray_imgl,k1,gray_imgr,k2,matches2, None, flags=2)
-    checkimg2 = cv2.drawMatches(gray_imgl,k1,gray_imgrn,k2n,matches2n, None, flags=2)
-    checkimg3 = cv2.drawMatches(gray_imgl,k1,gray_imgln,k1n,matches1n, None, flags=2)
-
-
-    plt.imshow(checkimg1),plt.show()
-    plt.imshow(checkimg2),plt.show()
-    plt.imshow(checkimg3),plt.show()
 
 
     return lmatch, rmatch, lmatchn, rmatchn

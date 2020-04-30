@@ -11,6 +11,7 @@ from update_camera_pose import ransac_F_Matrix
 from triangulate import triangulate
 from match_features import match_features
 from gif import gif
+import argparse
 
 # camera poses array
 plot_C = np.zeros((6509, 3))
@@ -19,6 +20,13 @@ plot_C = np.zeros((6509, 3))
 C = np.diag(np.ones(4))
 
 def main():
+
+	#command line argument
+	parser = argparse.ArgumentParser()
+    args = parser.parse_args("-p", "--plot", default = "no_img", help = "Either no_img, or plot_img" )
+	parser.add_argument()
+	PLOT = args.plot
+
 	# load images, which are stored in a folder named 'rectified' in the same directory as this file
 	data_dir = os.path.dirname(os.path.abspath(__file__))
 	ic = io.collection.ImageCollection(data_dir+'/rectified/*.png')
@@ -46,7 +54,12 @@ def main():
 		io.imshow_collection(curr)
 		plt.show()
 		'''
-		matchesl1, matchesr1, matchesl2, matchesr2 = match_features(imgl1, imgr1, imgl2, imgr2)
+
+		if PLOT.lower() == 'no_img' :
+			matchesl1, matchesr1, matchesl2, matchesr2 = match_features(imgl1, imgr1, imgl2, imgr2)
+		if PLOT.lower() == 'plot_img':
+			matchesl1, matchesr1, matchesl2, matchesr2 = match_features_plot(imgl1, imgr1, imgl2, imgr2)
+		
 		F, inliers_a1, inliers_b1, inliers_a2, inliers_b2,  = ransac_F_Matrix(matchesl1, matchesr1,matchesl2, matchesr2)
 
 		# frame1
@@ -70,6 +83,9 @@ def main():
 		print("")
 
 	gif(plot_C[0:200])
+
+
+
 
 
 main()

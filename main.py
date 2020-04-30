@@ -24,8 +24,8 @@ def main():
 	ic = io.collection.ImageCollection(data_dir+'/rectified/*.png')
 	half_idx = len(ic)//2
 	#load a few frames for testing
-	left_ic = ic[0:50]
-	right_ic = ic[half_idx:half_idx+50]
+	left_ic = ic[0:200]
+	right_ic = ic[half_idx:half_idx+200]
 	ic = None
 	# left_ic = ic[:half_idx]
 	# right_ic = ic[half_idx:]
@@ -52,20 +52,24 @@ def main():
 		# frame1
 		# F1, inliers_a1, inliers_b1 = ransac_F_Matrix(matchesl1, matchesr1)
 		coords3d1 = triangulate(inliers_a1, inliers_b1)
-		#coords3d1 = triangulate(matchesl1, matchesr1)
+		# coords3d1 = triangulate(matchesl1, matchesr1)
 		
 		# frame2
 		# F2, inliers_a2, inliers_b2 = ransac_F_Matrix(matchesl2, matchesr2)
 		coords3d2 = triangulate(inliers_a2, inliers_b2)
-		#coords3d2 = triangulate(matchesl2, matchesr2)
+		# coords3d2 = triangulate(matchesl2, matchesr2)
 		
-		C = update_camera_pose(coords3d1, coords3d2, C)
-
+		C_new = update_camera_pose(coords3d1, coords3d2, C)
+		rejection_threshold = 0.5 #meters
+		if(np.linalg.norm(C_new[0:3,3]-C[0:3,3]) < rejection_threshold):
+			print("New pose rejected")
+			C = C_new
+		
 		plot_C[i] = C[0:3,3].T
 		csv_writer.writerow(plot_C[i])
 		print("")
 
-	gif(plot_C[0:50])
+	gif(plot_C[0:200])
 
 
 main()

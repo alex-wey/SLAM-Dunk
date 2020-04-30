@@ -38,14 +38,16 @@ def gif(matrix):
     imageio.mimsave('SLAM.gif', images, duration=1/8)
 
 def main():
-
+    image_dir = os.path.dirname(os.path.abspath(__file__))
+    images = io.collection.ImageCollection(image_dir + '/poses/*.png')
+    imageio.mimsave('SLAM.gif', images[0:200], duration=1/8)
     # coords = np.zeros((30, 3))
     # c = np.array([1, 2, 3])
     # for i in range(30):
     #     coords[i] = c
     #     c = np.add(c, 1)
 
-    gif(coords)
+    #gif(coords)
 
 if __name__ == '__main__':
     main()

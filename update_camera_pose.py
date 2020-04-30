@@ -57,7 +57,7 @@ def ransac_F_Matrix(matches_a, matches_b, matches_an, matches_bn):
     an_append = np.append(matches_an, np.ones((n, 1)), axis=1)
     bn_append = np.append(matches_bn, np.ones((n, 1)), axis=1)
 
-
+    N = 50
     for i in range(N):
         samples = np.random.choice(n, s)
         sample_a = matches_a[samples]

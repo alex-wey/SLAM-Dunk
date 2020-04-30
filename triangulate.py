@@ -108,17 +108,3 @@ def triangulate(Points_a, Points_b):
         world_points[i] = np.array([X, Z, Y])
 
     return world_points
-
-
-def main():
-    xl = 249
-    yl = 153
-    xr = 257
-
-    Z = (b * f)/abs(xl - xr)
-    X = xl * Z/f
-    Y = yl * Z/f
-
-    print(X, Y, Z)
-
-main()

@@ -20,8 +20,8 @@ def gif(matrix):
     ax.set_ylim3d(np.min(matrix[:,1])-10, np.max(matrix[:,1])+10)
     ax.set_zlim3d(np.min(matrix[:,2])-10, np.max(matrix[:,2])+10)
     ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_zlabel('z')
+    ax.set_ylabel('z')
+    ax.set_zlabel('y')
 
     for i, coords in enumerate(matrix):
 
@@ -30,7 +30,7 @@ def gif(matrix):
         y = gif_coords[0:i+1,1]
         z = gif_coords[0:i+1,2]
         
-        ax.scatter(x, y, z)
+        ax.scatter(x, y, z, c='#d62728')
         plt.savefig('poses/camera_pose_' + str(i) + '.png')
 
     image_dir = os.path.dirname(os.path.abspath(__file__))
@@ -51,3 +51,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

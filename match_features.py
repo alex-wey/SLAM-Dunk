@@ -1,19 +1,10 @@
 import numpy as np
 import cv2
-from matplotlib import pyplot
+from matplotlib import pyplot as plt
 from skimage.color import rgb2gray
 
 #Input: two images
 #Output: two (n, 2) matrix matches
-
-    # 3D-2D match features
-#     1) Capture two stereo image pairs Il;k-1, Ir;k-1 and Il;k, Ir;k
-#     2) Extract and match features between Il;k-1 and Il;k
-#     3) Triangulate matched features for each stereo pair
-#     4) Compute Tk from 3-D features Xk1 and Xk
-#     5) Concatenate transformation by computing Ck ¼ Ck1Tk
-#     6) Repeat from 1).
-
 def match_features(imgl, imgr, imgln, imgrn):
     #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
     print("Matching Features...")
@@ -94,5 +85,16 @@ def match_features(imgl, imgr, imgln, imgrn):
     lmatchn = np.array(left_matchesn)
     rmatch = np.array(right_matches)
     rmatchn = np.array(right_matchesn)
+
+
+    checkimg1 = cv2.drawMatches(gray_imgl,k1,gray_imgr,k2,matches2, flags=2)
+    checkimg2 = cv2.drawMatches(gray_imgl,k1,gray_imgrn,k2n,matches2n, flags=2)
+    checkimg3 = cv2.drawMatches(gray_imgl,k1,gray_imgln,k1n,matches1n, flags=2)
+
+
+    plt.imshow(checkimg1),plt.show()
+    plt.imshow(checkimg2),plt.show()
+    plt.imshow(checkimg3),plt.show()
+
 
     return lmatch, rmatch, lmatchn, rmatchn

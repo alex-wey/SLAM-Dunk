@@ -23,8 +23,8 @@ def main():
 
 	#command line argument
 	parser = argparse.ArgumentParser()
-    args = parser.parse_args("-p", "--plot", default = "no_img", help = "Either no_img, or plot_img" )
-	parser.add_argument()
+    parser.add_argument("-p", "--plot", default = "no_img", help = "Either no_img, or plot_img" )
+	args = parser.parse_args()
 	PLOT = args.plot
 
 	# load images, which are stored in a folder named 'rectified' in the same directory as this file

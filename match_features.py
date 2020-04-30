@@ -8,6 +8,8 @@ from skimage.color import rgb2gray
 def match_features(imgl, imgr, imgln, imgrn):
     #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
     print("Matching Features...")
+
+
     gray_imgl = cv2.cvtColor(imgl, cv2.COLOR_BGR2GRAY)
     gray_imgr = cv2.cvtColor(imgr, cv2.COLOR_BGR2GRAY)
     gray_imgln = cv2.cvtColor(imgln, cv2.COLOR_BGR2GRAY)
@@ -86,9 +88,6 @@ def match_features(imgl, imgr, imgln, imgrn):
     rmatch = np.array(right_matches)
     rmatchn = np.array(right_matchesn)
 
-    if(lmatch[1] != rmatch[1]):
-        print('y')
-
     checkimg1 = cv2.drawMatches(gray_imgl,k1,gray_imgr,k2,matches2, None, flags=2)
     checkimg2 = cv2.drawMatches(gray_imgl,k1,gray_imgrn,k2n,matches2n, None, flags=2)
     checkimg3 = cv2.drawMatches(gray_imgl,k1,gray_imgln,k1n,matches1n, None, flags=2)
@@ -100,3 +99,5 @@ def match_features(imgl, imgr, imgln, imgrn):
 
 
     return lmatch, rmatch, lmatchn, rmatchn
+
+

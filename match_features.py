@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from matplotlib import pyplot
+from matplotlib import pyplot as plt
 from skimage.color import rgb2gray
 
 #Input: two images
@@ -85,5 +85,12 @@ def match_features(imgl, imgr, imgln, imgrn):
     lmatchn = np.array(left_matchesn)
     rmatch = np.array(right_matches)
     rmatchn = np.array(right_matchesn)
+
+
+    checkimg1 = cv2.drawMatches(gray_imgl,k1,gray_imgr,k2,matches2, flags=2)
+    checkimg2 = cv2.drawMatches(gray_imgl,k1,gray_imgrn,k2n,matches2n, flags=2)
+
+    plt.imshow(checkimg1),plt.show()
+    plt.imshow(checkimg2),plt.show()
 
     return lmatch, rmatch, lmatchn, rmatchn

@@ -101,6 +101,12 @@ def triangulate(Points_a, Points_b):
         yl = Points_a[i, 1]
         xr = Points_b[i, 0]
 
+        xl -= cx
+        yl = (480-yl) - cy
+
+        xr -= cx
+        # yr = (480-yr) - cy
+
         Z = (b * f)/abs(xl - xr)
         X = xl * Z/f
         Y = yl * Z/f

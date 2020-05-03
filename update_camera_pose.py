@@ -16,7 +16,11 @@ def update_camera_pose(coord1, coord2, C):
     q1 = coord1 - p1
     q2 = coord2 - p2
     
-    H = np.dot(np.transpose(q1), q2)
+    # H = np.dot(np.transpose(q1), q2)
+    H = np.zeros((3,3))
+    for i in range(n):
+        H = H + np.outer(q1[i,:], q2[i,:])
+
     u, s, vh = np.linalg.svd(H)
     X = np.transpose(vh) @ np.transpose(u)
     detX = np.linalg.det(X)
@@ -32,7 +36,7 @@ def update_camera_pose(coord1, coord2, C):
     T[3,3] = 1
     
     #update Camera Transformation with new T
-    return T@C
+    return C@T
 
 
 # Input: 'matches_a' is nx2 matrix of 2D coordinate of points on Image A

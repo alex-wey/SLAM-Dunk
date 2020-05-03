@@ -10,6 +10,7 @@ from update_camera_pose import update_camera_pose
 from update_camera_pose import ransac_F_Matrix
 from triangulate import triangulate
 from match_features import match_features
+from match_featires_plot import match_featires_plot
 from gif import gif
 import argparse
 

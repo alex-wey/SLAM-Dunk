@@ -111,7 +111,8 @@ def triangulate(Points_a, Points_b):
         xr -= cx
 
         d = abs(xl - xr)
-        if d >= threshold:
+        #if d >= threshold:
+        if True:
             Z = (b * f)/d
             X = xl * Z/f
             Y = yl * Z/f
@@ -125,4 +126,5 @@ def triangulate(Points_a, Points_b):
 def zstd(points):
     z = points[:,2]
     return np.std(z)
+    
     

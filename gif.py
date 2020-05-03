@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import animation
 from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.animation
 
 # Input: numpy array of x,y,z coordinates of camera
 # Output: 3D representation of a camera's path as gif
@@ -31,5 +31,5 @@ def gif(matrix):
         sc._offsets3d = (df.x.values[:i], df.y.values[:i], df.z.values[:i])
 
     # animate and save
-    ani = matplotlib.animation.FuncAnimation(fig, animate, frames=frn, interval=70)
+    ani = animation.FuncAnimation(fig, animate, frames=frn, interval=70)
     ani.save('SLAM.mp4', writer=writer)

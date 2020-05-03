@@ -47,7 +47,8 @@ def main():
 	csv_feature_writer = csv.writer(csv_features_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	# initial camera pose
 	C = np.diag(np.ones(4))
-	prev = []
+	prevl = []
+	prevr = []
 	for i in range(len(left_ic)-1):
 		print("Iteration ", i, "/", len(left_ic)-1)
 		imgl1 = left_ic[i]
@@ -79,31 +80,32 @@ def main():
 				print("skipping frame \n")
 				continue
 			elif(zstd1>=std_threshold and zstd2<std_threshold):
-				if(prev != []):
-					coords3d1 = copy.deepcopy(prev)
+				if(prevl != [] and prevr != []):
+					matchesl1, matchesr1, matchesl2, matchesr2 = match_features(prevl, prevr, imgl2, imgr2)
+					F, inliers_a1, inliers_b1, inliers_a2, inliers_b2,  = ransac_F_Matrix(matchesl1, matchesr1,matchesl2, matchesr2)
+					coords3d1 = triangulate(inliers_a1, inliers_b1)
+					coords3d2 = triangulate(inliers_a2, inliers_b2)
 				else:
 					print("skipping frame \n")
 					continue
 			elif(zstd1<std_threshold and zstd2>=std_threshold):
-				prev = copy.deepcopy(coords3d1)
+				prevl = copy.deepcopy(imgl1)
+				prevr = copy.deepcopy(imgr1)
 				print("skipping frame \n")
 				continue
 			else:
-				prev = []
+				prevl = []
+				prevr = []
 			inliers = coords3d1.shape[0]
 			coords_abs = C.T @ np.append(coords3d1, np.ones((inliers, 1)), axis=1).T
 			csv_feature_writer.writerows(coords_abs[0:3,:].T)
 			C_new = update_camera_pose(coords3d1, coords3d2, C)
+			C = C_new
 			rejection_threshold = 0.5 #meters
 			pose_distance = np.linalg.norm(C_new[0:3,3] - C[0:3,3])
-			print("Pose Distance", pose_distance)
-			if(pose_distance < rejection_threshold):
-				C = C_new
-			else:
-				print("New pose rejected")
 
-		
-		plot_C[i] = C[0:3,3].T
+
+		plot_C[i] = C_new[0:3,3].T
 		csv_writer.writerow(plot_C[i])
 		print("")
 

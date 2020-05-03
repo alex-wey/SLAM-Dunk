@@ -1,3 +1,6 @@
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import math
 
@@ -94,7 +97,9 @@ def triangulate(Points_a, Points_b):
     print('Triangulating coordinates...')
 
     num_Points = Points_a.shape[0]
-    world_points = np.zeros((num_Points, 3))
+    world_points = []
+
+    threshold = 5
 
     for i in range(num_Points):
         xl = Points_a[i, 0]
@@ -103,14 +108,16 @@ def triangulate(Points_a, Points_b):
 
         xl -= cx
         yl = (480-yl) - cy
-
         xr -= cx
-        # yr = (480-yr) - cy
 
-        Z = (b * f)/abs(xl - xr)
-        X = xl * Z/f
-        Y = yl * Z/f
-
-        world_points[i] = np.array([X, Z, Y])
+        d = abs(xl - xr)
+        if d >= threshold:
+            Z = (b * f)/d
+            X = xl * Z/f
+            Y = yl * Z/f
+            
+            world_points.append(np.array([X, Z, Y]))
+    
+    world_points = np.array(world_points)
 
     return world_points

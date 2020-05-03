@@ -113,9 +113,12 @@ def main():
 			csv_feature_writer.writerows(coords_abs[0:3,:].T)
 			C_new = update_camera_pose(coords3d1, coords3d2, C)
 			pose_distance = np.linalg.norm(C_new[0:3,3] - C[0:3,3])
-			print("Pose Distance", pose_distance)
-			C = C_new
 			rejection_threshold = 0.5 #meters
+			print("Pose Distance", pose_distance)
+			if(pose_distance < rejection_threshold):
+				C = C_new
+			else:
+				print("pose rejected")
 
 
 

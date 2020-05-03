@@ -5,7 +5,7 @@ from skimage.color import rgb2gray
 
 #Input: two images
 #Output: two (n, 2) matrix matches
-def match_features(imgl, imgr, imgln, imgrn):
+def match_features_plot(imgl, imgr, imgln, imgrn):
     #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
     print("Matching Features...")
 
@@ -70,24 +70,19 @@ def match_features(imgl, imgr, imgln, imgrn):
         continue
 
 
-                
-    
-
-
-    # for match2 in new_matches2:
-    #     x1n, y1n = k2[match2.queryIdx].pt
-    #     x2n, y2n = k2n[match2.trainIdx].pt
-    #     right_matches.append([x1n, y1n])
-    #     right_matchesn.append([x2n,y2n])
-
-    
-    # lmatch = xy in k-1 left, lmatchn = xy in k left, 
-    # rmatch = xy in k-1 right, rmatchn = xy in k right
     lmatch = np.array(left_matches)
     lmatchn = np.array(left_matchesn)
     rmatch = np.array(right_matches)
     rmatchn = np.array(right_matchesn)
 
+    checkimg1 = cv2.drawMatches(gray_imgl,k1,gray_imgr,k2,matches2, None, flags=2)
+    checkimg2 = cv2.drawMatches(gray_imgl,k1,gray_imgrn,k2n,matches2n, None, flags=2)
+    checkimg3 = cv2.drawMatches(gray_imgl,k1,gray_imgln,k1n,matches1n, None, flags=2)
+
+
+    plt.imshow(checkimg1),plt.show()
+    plt.imshow(checkimg2),plt.show()
+    plt.imshow(checkimg3),plt.show()
 
 
     return lmatch, rmatch, lmatchn, rmatchn

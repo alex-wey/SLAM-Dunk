@@ -5,7 +5,7 @@ from skimage.color import rgb2gray
 
 #Input: two images
 #Output: two (n, 2) matrix matches
-def match_features(imgl, imgr, imgln, imgrn):
+def match_features_plot(imgl, imgr, imgln, imgrn):
     #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
     print("Matching Features...")
 

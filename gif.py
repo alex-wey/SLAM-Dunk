@@ -19,16 +19,18 @@ def gif(matrix):
     ax = fig.add_subplot(111,projection='3d')
     sc = ax.scatter([],[],[], c='#d62728', alpha=0.5)
     
+    # label axis
     ax.set_title('Camera Pose')
     ax.set_xlim3d(np.min(matrix[:,0])-10, np.max(matrix[:,0])+10)
     ax.set_xlabel('x')
     ax.set_ylim3d(np.min(matrix[:,1])-10, np.max(matrix[:,1])+10)
-    ax.set_ylabel('y')
+    ax.set_ylabel('z')
     ax.set_zlim3d(np.min(matrix[:,2])-10, np.max(matrix[:,2])+10)
-    ax.set_zlabel('z')
+    ax.set_zlabel('y')
 
     def animate(i):
         sc._offsets3d = (df.x.values[:i], df.y.values[:i], df.z.values[:i])
 
+    # animate and save
     ani = matplotlib.animation.FuncAnimation(fig, animate, frames=frn, interval=70)
     ani.save('SLAM.mp4', writer=writer)

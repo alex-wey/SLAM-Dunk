@@ -9,10 +9,12 @@ from skimage import io
 from update_camera_pose import update_camera_pose
 from update_camera_pose import ransac_F_Matrix
 from triangulate import triangulate
+from triangulate import zstd
 from match_features import match_features
-from match_featires_plot import match_featires_plot
+from match_features_plot import match_features_plot
 from gif import gif
 import argparse
+import copy
 
 # camera poses array
 plot_C = np.zeros((6509, 3))
@@ -24,7 +26,7 @@ def main():
 
 	#command line argument
 	parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--plot", default = "no_img", help = "Either no_img, or plot_img" )
+	parser.add_argument("-p", "--plot", default = "no_img", help = "Either no_img, or plot_img" )
 	args = parser.parse_args()
 	PLOT = args.plot
 
@@ -45,6 +47,7 @@ def main():
 	csv_feature_writer = csv.writer(csv_features_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 	# initial camera pose
 	C = np.diag(np.ones(4))
+	prev = []
 	for i in range(len(left_ic)-1):
 		print("Iteration ", i, "/", len(left_ic)-1)
 		imgl1 = left_ic[i]
@@ -63,6 +66,30 @@ def main():
 			matchesl1, matchesr1, matchesl2, matchesr2 = match_features_plot(imgl1, imgr1, imgl2, imgr2)
 		if(matchesl1.shape[0] >= 3):	
 			F, inliers_a1, inliers_b1, inliers_a2, inliers_b2,  = ransac_F_Matrix(matchesl1, matchesr1,matchesl2, matchesr2)
+			std_threshold = 1
+			coords3d1 = triangulate(inliers_a1, inliers_b1)
+			coords3d2 = triangulate(inliers_a2, inliers_b2)
+			if(len(coords3d1)==0 or len(coords3d2)==0):
+				print("skipping frame \n")
+				continue
+			zstd1 = zstd(coords3d1)
+			zstd2 = zstd(coords3d2)
+			print("std:", zstd1, zstd2)
+			if(zstd1>=std_threshold and zstd2>=std_threshold):
+				print("skipping frame \n")
+				continue
+			elif(zstd1>=std_threshold and zstd2<std_threshold):
+				if(prev != []):
+					coords3d1 = copy.deepcopy(prev)
+				else:
+					print("skipping frame \n")
+					continue
+			elif(zstd1<std_threshold and zstd2>=std_threshold):
+				prev = copy.deepcopy(coords3d1)
+				print("skipping frame \n")
+				continue
+			else:
+				prev = []
 			inliers = coords3d1.shape[0]
 			coords_abs = C.T @ np.append(coords3d1, np.ones((inliers, 1)), axis=1).T
 			csv_feature_writer.writerows(coords_abs[0:3,:].T)
@@ -74,6 +101,7 @@ def main():
 				C = C_new
 			else:
 				print("New pose rejected")
+
 		
 		plot_C[i] = C[0:3,3].T
 		csv_writer.writerow(plot_C[i])

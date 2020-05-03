@@ -9,12 +9,12 @@ from skimage import io
 from update_camera_pose import update_camera_pose
 from update_camera_pose import ransac_F_Matrix
 from triangulate import triangulate
-from triangulate import zstd
 from match_features import match_features
 from match_features_plot import match_features_plot
 from gif import gif
 import argparse
 import copy
+import math
 
 # camera poses array
 plot_C = np.zeros((6509, 3))
@@ -49,6 +49,7 @@ def main():
 	C = np.diag(np.ones(4))
 	prevl = []
 	prevr = []
+	pts = np.array([])
 	for i in range(len(left_ic)-1):
 		print("Iteration ", i, "/", len(left_ic)-1)
 		imgl1 = left_ic[i]
@@ -67,14 +68,25 @@ def main():
 			matchesl1, matchesr1, matchesl2, matchesr2 = match_features_plot(imgl1, imgr1, imgl2, imgr2)
 		if(matchesl1.shape[0] >= 3):	
 			F, inliers_a1, inliers_b1, inliers_a2, inliers_b2,  = ransac_F_Matrix(matchesl1, matchesr1,matchesl2, matchesr2)
-			std_threshold = 1
+			std_threshold = 0.5
 			coords3d1 = triangulate(inliers_a1, inliers_b1)
 			coords3d2 = triangulate(inliers_a2, inliers_b2)
 			if(len(coords3d1)==0 or len(coords3d2)==0):
 				print("skipping frame \n")
 				continue
-			zstd1 = zstd(coords3d1)
-			zstd2 = zstd(coords3d2)
+			z1 = coords3d1[:,2]
+			z2 = coords3d2[:,2]
+			if(i==0):
+				pts = np.append(pts, z1)
+			pts = np.append(pts, z2)
+			if(len(pts)>100):
+				pts = pts[:100]
+			mean = np.mean(pts)
+			std = np.std(pts)
+			std1 = np.std(z1)
+			std2 = np.std(z2)
+			zstd1 = np.abs(std1-std)
+			zstd2 = np.abs(std2-std)
 			print("std:", zstd1, zstd2)
 			if(zstd1>=std_threshold and zstd2>=std_threshold):
 				print("skipping frame \n")

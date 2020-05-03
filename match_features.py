@@ -6,9 +6,7 @@ from skimage.color import rgb2gray
 #Input: two images
 #Output: two (n, 2) matrix matches
 def match_features(imgl, imgr, imgln, imgrn):
-    #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
     print("Matching Features...")
-
 
     gray_imgl = cv2.cvtColor(imgl, cv2.COLOR_BGR2GRAY)
     gray_imgr = cv2.cvtColor(imgr, cv2.COLOR_BGR2GRAY)
@@ -42,8 +40,6 @@ def match_features(imgl, imgr, imgln, imgrn):
     matches2n = sorted(matches2n, key=lambda x: x.distance)
     matches2n = matches2n[:50]
     
-    #get the same matches
-    # same = new_matches & new_matches2
     
     #get the xy coordinate of the matches
     left_matches = []
@@ -53,7 +49,6 @@ def match_features(imgl, imgr, imgln, imgrn):
     for match in matches1n:
         x1, y1 = k1[match.queryIdx].pt
         x1n, y1n = k1n[match.trainIdx].pt
-
 
         for match2 in matches2:
             if (match2.queryIdx == match.queryIdx):
@@ -69,26 +64,10 @@ def match_features(imgl, imgr, imgln, imgrn):
                 break                  
         continue
 
-
-                
-    
-
-
-    # for match2 in new_matches2:
-    #     x1n, y1n = k2[match2.queryIdx].pt
-    #     x2n, y2n = k2n[match2.trainIdx].pt
-    #     right_matches.append([x1n, y1n])
-    #     right_matchesn.append([x2n,y2n])
-
-    
-    # lmatch = xy in k-1 left, lmatchn = xy in k left, 
-    # rmatch = xy in k-1 right, rmatchn = xy in k right
     lmatch = np.array(left_matches)
     lmatchn = np.array(left_matchesn)
     rmatch = np.array(right_matches)
     rmatchn = np.array(right_matchesn)
-
-
 
     return lmatch, rmatch, lmatchn, rmatchn
 

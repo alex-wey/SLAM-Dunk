@@ -67,7 +67,7 @@ def main():
 			matchesl1, matchesr1, matchesl2, matchesr2 = match_features_plot(imgl1, imgr1, imgl2, imgr2)
 		if(matchesl1.shape[0] >= 3):	
 			F, inliers_a1, inliers_b1, inliers_a2, inliers_b2,  = ransac_F_Matrix(matchesl1, matchesr1,matchesl2, matchesr2)
-			std_threshold = 1
+			std_threshold = 2
 			coords3d1 = triangulate(inliers_a1, inliers_b1)
 			coords3d2 = triangulate(inliers_a2, inliers_b2)
 			if(len(coords3d1)==0 or len(coords3d2)==0):
@@ -100,9 +100,11 @@ def main():
 			coords_abs = C.T @ np.append(coords3d1, np.ones((inliers, 1)), axis=1).T
 			csv_feature_writer.writerows(coords_abs[0:3,:].T)
 			C_new = update_camera_pose(coords3d1, coords3d2, C)
+			pose_distance = np.linalg.norm(C_new[0:3,3] - C[0:3,3])
+			print("Pose Distance", pose_distance)
 			C = C_new
 			rejection_threshold = 0.5 #meters
-			pose_distance = np.linalg.norm(C_new[0:3,3] - C[0:3,3])
+
 
 
 		plot_C[i] = C_new[0:3,3].T

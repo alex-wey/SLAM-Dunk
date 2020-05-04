@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 from skimage.color import rgb2gray
 import itertools
 from PIL import Image
+import matplotlib.pyplot as plt
 
 
 #Input: two images
@@ -94,13 +95,13 @@ def match_features(imgl, imgr, imgln, imgrn):
                     for match2 in matches2:
                         if (match2.queryIdx == match.queryIdx):
                             x2, y2 = k2[match2.trainIdx].pt
-                            left_matches.append(add_pixels(itr, x1, y1))
-                            left_matchesn.append(add_pixels(itr, x1n, y1n))
-                            right_matches.append(add_pixels(itr, x2, y2))
                             for match2n in matches2n:
                                 if (match2n.queryIdx == match.queryIdx):
                                     x2n, y2n = k2n[match2n.trainIdx].pt
                                     right_matchesn.append(add_pixels(itr, x2n, y2n))
+                                    left_matches.append(add_pixels(itr, x1, y1))
+                                    left_matchesn.append(add_pixels(itr, x1n, y1n))
+                                    right_matches.append(add_pixels(itr, x2, y2))
                                     break
                             break                  
                     continue
@@ -133,7 +134,13 @@ def match_features(imgl, imgr, imgln, imgrn):
     rmatchesn = np.concatenate(rmatchesn, axis = 0)
 
 
-
+    
+    # x_range = lmatches[:,0]
+    # y_range = lmatches[:,1]
+    # fig=plt.figure()
+    # ax=fig.add_axes([0,0,1,1])
+    # ax.scatter(x_range, y_range, color='r')
+    # plt.show()
 
     return lmatches, rmatches, lmatchesn, rmatchesn
 

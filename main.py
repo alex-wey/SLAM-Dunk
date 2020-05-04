@@ -114,6 +114,7 @@ def main():
 			else:
 				prevl = []
 				prevr = []
+			
 			inliers = coords3d1.shape[0]
 			coords_abs = C.T @ np.append(coords3d1, np.ones((inliers, 1)), axis=1).T
 			csv_feature_writer.writerows(coords_abs[0:3,:].T)

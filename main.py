@@ -35,11 +35,11 @@ def main():
 	ic = io.collection.ImageCollection(data_dir+'/rectified/*.png')
 	half_idx = len(ic)//2
 	#load a few frames for testing
-	left_ic = ic[0:500]
-	right_ic = ic[half_idx:half_idx+500]
-	ic = None
-	# left_ic = ic[:half_idx]
-	# right_ic = ic[half_idx:]
+	# left_ic = ic[0+513:500+513]
+	# right_ic = ic[half_idx+513:half_idx+500+513]
+	# ic = None
+	left_ic = ic[:half_idx]
+	right_ic = ic[half_idx:]
 	# images have shape (480, 640, 3)
 	csv_file = open("points.csv", mode='w')
 	csv_features_file = open("features.csv", mode='w')
@@ -134,7 +134,7 @@ def main():
 		csv_writer.writerow(plot_C[i])
 		print("")
 
-	gif(plot_C[0:500])
+	gif(plot_C)
 
 
 

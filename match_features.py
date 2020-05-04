@@ -78,11 +78,9 @@ def match_features(imgl, imgr, imgln, imgrn):
                 matches2n = matches2n[:50]
             except Exception as e:
                 print("No match")
+                return np.zeros((1,2)), np.zeros((1,2)), np.zeros((1,2)), np.zeros((1,2))
 
-    #get the same matches
-    # same = new_matches & new_matches2
-    
-    #get the xy coordinate of the matches
+
             left_matches = []
             right_matches = []
             left_matchesn =[]
@@ -105,21 +103,21 @@ def match_features(imgl, imgr, imgln, imgrn):
                     continue
 
 
-
             lmatch = np.array(left_matches)
             lmatchn = np.array(left_matchesn)
             rmatch = np.array(right_matches)
             rmatchn = np.array(right_matchesn) 
 
-            total_lmatches.append(lmatch)
-            total_rmatches.append(rmatch)
-            total_lmatchesn.append(lmatchn)
-            total_rmatchesn.append(rmatchn)
+            if(lmatch.shape[0] != 0):
+                total_lmatches.append(lmatch)
+                total_rmatches.append(rmatch)
+                total_lmatchesn.append(lmatchn)
+                total_rmatchesn.append(rmatchn)
 
-            lmatches = np.array(total_lmatches)
-            rmatches = np.array(total_rmatches)
-            lmatchesn = np.array(total_lmatchesn)
-            rmatchesn = np.array(total_rmatchesn)
+                lmatches = np.array(total_lmatches)
+                rmatches = np.array(total_rmatches)
+                lmatchesn = np.array(total_lmatchesn)
+                rmatchesn = np.array(total_rmatchesn)
 
             itr += 1
 

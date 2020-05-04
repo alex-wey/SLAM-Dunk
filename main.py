@@ -68,7 +68,7 @@ def main():
 			matchesl1, matchesr1, matchesl2, matchesr2 = match_features_plot(imgl1, imgr1, imgl2, imgr2)
 		if(matchesl1.shape[0] >= 3):	
 			F, inliers_a1, inliers_b1, inliers_a2, inliers_b2,  = ransac_F_Matrix(matchesl1, matchesr1,matchesl2, matchesr2)
-			std_threshold = 0.5
+			std_threshold = 2
 			coords3d1 = triangulate(inliers_a1, inliers_b1)
 			coords3d2 = triangulate(inliers_a2, inliers_b2)
 			if(len(coords3d1)==0 or len(coords3d2)==0):
@@ -83,10 +83,16 @@ def main():
 				pts = pts[:100]
 			mean = np.mean(pts)
 			std = np.std(pts)
-			std1 = np.std(z1)
-			std2 = np.std(z2)
-			zstd1 = np.abs(std1-std)
-			zstd2 = np.abs(std2-std)
+			# std1 = np.std(z1)
+			# std2 = np.std(z2)
+			mean1 = np.mean(z1)
+			mean2 = np.mean(z2)
+
+			# zstd1 = np.abs(std1-std)
+			# zstd2 = np.abs(std2-std)
+			zstd1 = mean1/std
+			zstd2 = mean2/std
+
 			print("std:", zstd1, zstd2)
 			if(zstd1>=std_threshold and zstd2>=std_threshold):
 				print("skipping frame \n")
@@ -114,6 +120,7 @@ def main():
 			C_new = update_camera_pose(coords3d1, coords3d2, C)
 			pose_distance = np.linalg.norm(C_new[0:3,3] - C[0:3,3])
 			rejection_threshold = 0.5 #meters
+			print("Pose", C[0:3,3])
 			print("Pose Distance", pose_distance)
 			if(pose_distance < rejection_threshold):
 				C = C_new
@@ -122,11 +129,11 @@ def main():
 
 
 
-		plot_C[i] = C_new[0:3,3].T
+		plot_C[i] = C[0:3,3].T
 		csv_writer.writerow(plot_C[i])
 		print("")
 
-	#gif(plot_C[0:200])
+	gif(plot_C[0:500])
 
 
 

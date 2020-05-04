@@ -60,26 +60,24 @@ def match_features(imgl, imgr, imgln, imgrn):
 
             bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
 
-            #matches between imgl and imgln
-            matches1n = bf.match(d1,d1n)
-            #matches between imgl and imgr
-            matches2 = bf.match(d1,d2)
-            #matches between imgl and imgrn
-            matches2n = bf.match(d1,d2n)
+            try:
+                #matches between imgl and imgln
+                matches1n = bf.match(d1,d1n)
+                #matches between imgl and imgr
+                matches2 = bf.match(d1,d2)
+                #matches between imgl and imgrn
+                matches2n = bf.match(d1,d2n)
 
+                matches1n = sorted(matches1n, key=lambda x: x.distance)
+                matches1n = matches1n[:50]
 
-            matches1n = sorted(matches1n, key=lambda x: x.distance)
-            matches1n = matches1n[:50]
+                matches2 = sorted(matches2, key=lambda x: x.distance)
+                matches2 = matches2[:50]
 
-            matches2 = sorted(matches2, key=lambda x: x.distance)
-            matches2 = matches2[:50]
-
-            matches2n = sorted(matches2n, key=lambda x: x.distance)
-            matches2n = matches2n[:50]
-
-            
-
-
+                matches2n = sorted(matches2n, key=lambda x: x.distance)
+                matches2n = matches2n[:50]
+            except Exception as e:
+                print("No match")
 
     #get the same matches
     # same = new_matches & new_matches2

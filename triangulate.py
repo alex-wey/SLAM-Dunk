@@ -16,7 +16,6 @@ cy = 245.845
 #        'Points_b' is nx2 matrix of 2D coordinate of points on Image B
 # Output: 'F_matrix' is 3x3 fundamental matrix
 def calculate_F_Matrix(Points_a,Points_b):
-
     # normalize coordinates
     F = np.zeros((3, 3))
 
@@ -95,7 +94,6 @@ def calculate_F_Matrix(Points_a,Points_b):
 #        'Points_b' is nx2 matrix of 2D coordinate of points on Image match B
 # Output: nx3 matrix of the 3D world points
 def triangulate(Points_a, Points_b):
-    
     print('Triangulating coordinates...')
 
     num_Points = Points_a.shape[0]

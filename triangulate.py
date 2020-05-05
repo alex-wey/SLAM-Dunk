@@ -17,6 +17,7 @@ cy = 245.845
 # Output: 'F_matrix' is 3x3 fundamental matrix
 def calculate_F_Matrix(Points_a,Points_b):
 
+    # normalize coordinates
     F = np.zeros((3, 3))
 
     num_Points = Points_a.shape[0]
@@ -69,6 +70,7 @@ def calculate_F_Matrix(Points_a,Points_b):
         Points_a_2[i] = norm_a[0:2, 0]
         Points_b_2[i] = norm_b[0:2, 0]
 
+    # calculate F matrix
     for i in range(num_Points):
         u_a = Points_a_2[i, 0]
         v_a = Points_a_2[i, 1]

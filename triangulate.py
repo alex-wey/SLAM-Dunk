@@ -99,7 +99,7 @@ def triangulate(Points_a, Points_b):
     num_Points = Points_a.shape[0]
     world_points = []
 
-    threshold = 5
+    threshold = 0
 
     for i in range(num_Points):
         xl = Points_a[i, 0]
@@ -111,8 +111,7 @@ def triangulate(Points_a, Points_b):
         xr -= cx
 
         d = abs(xl - xr)
-        #if d >= threshold:
-        if True:
+        if d >= threshold:
             Z = (b * f)/d
             X = xl * Z/f
             Y = yl * Z/f

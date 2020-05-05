@@ -93,12 +93,10 @@ def calculate_F_Matrix(Points_a,Points_b):
 #        'Points_b' is nx2 matrix of 2D coordinate of points on Image match B
 # Output: nx3 matrix of the 3D world points
 def triangulate(Points_a, Points_b):
-
     print('Triangulating coordinates...')
 
     num_Points = Points_a.shape[0]
     world_points = []
-
     threshold = 0
 
     for i in range(num_Points):

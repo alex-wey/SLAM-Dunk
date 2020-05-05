@@ -107,6 +107,7 @@ def triangulate(Points_a, Points_b):
         yl = Points_a[i, 1]
         xr = Points_b[i, 0]
 
+        # triangulation formula
         xl -= cx
         yl = (480-yl) - cy
         xr -= cx

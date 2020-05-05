@@ -93,6 +93,7 @@ def calculate_F_Matrix(Points_a,Points_b):
 #        'Points_b' is nx2 matrix of 2D coordinate of points on Image match B
 # Output: nx3 matrix of the 3D world points
 def triangulate(Points_a, Points_b):
+    
     print('Triangulating coordinates...')
 
     num_Points = Points_a.shape[0]
@@ -107,7 +108,6 @@ def triangulate(Points_a, Points_b):
         xl -= cx
         yl = (480-yl) - cy
         xr -= cx
-
         d = abs(xl - xr)
         if d >= threshold:
             Z = (b * f)/d
@@ -117,11 +117,8 @@ def triangulate(Points_a, Points_b):
             world_points.append(np.array([X, Z, Y]))
     
     world_points = np.array(world_points)
-
     return world_points
 
 def zstd(points):
     z = points[:,2]
     return np.std(z)
-    
-    

@@ -119,7 +119,3 @@ def triangulate(Points_a, Points_b):
     
     world_points = np.array(world_points)
     return world_points
-
-def zstd(points):
-    z = points[:,2]
-    return np.std(z)

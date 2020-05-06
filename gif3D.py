@@ -43,10 +43,3 @@ def gif(matrix):
     # animate and save
     ani = animation.FuncAnimation(fig, animate, frames=frn, interval=5)
     ani.save(path + 'SLAM_3D.mp4', writer=writer)
-    ani
-
-def main():
-    our_points = pd.read_csv(path + "/our_points.csv").values
-    gif(our_points)
-
-main()

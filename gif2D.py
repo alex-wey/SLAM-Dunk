@@ -38,4 +38,4 @@ def gif(matrix):
 
     # animate and save
     ani = animation.FuncAnimation(fig, animate, frames=frn, interval=5)
-    ani.save('SLAM.mp4', writer=writer)
+    ani.save('SLAM_2D.mp4', writer=writer)

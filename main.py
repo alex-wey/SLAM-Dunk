@@ -130,16 +130,11 @@ def main():
 			else:
 				print("pose rejected")
 
-
-
 		plot_C[i] = C[0:3,3].T
 		csv_writer.writerow(plot_C[i])
 		print("")
 
 	gif(plot_C)
-
-
-
 
 
 main()

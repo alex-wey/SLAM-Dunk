@@ -6,13 +6,10 @@ import itertools
 from PIL import Image
 import matplotlib.pyplot as plt
 
-
 #Input: two images
 #Output: two (n, 2) matrix matches
 #$ pip install image_slicer
-
 def match_features(imgl, imgr, imgln, imgrn):
-    #imgl, imgr = k-1 pairs  imgln, imgrn = k pairs
     print("Matching Features...")
 
     itr = 0
@@ -42,19 +39,16 @@ def match_features(imgl, imgr, imgln, imgrn):
             chop3 = gray_imgln[i : i +width1, j:j+width2]
             chop4 = gray_imgrn[i : i +width1, j:j+width2]
 
-
             chop1 = np.array(chop1)
             chop2 = np.array(chop2)
             chop3 = np.array(chop3)
             chop4 = np.array(chop4)
-
 
             #extracting the keypoints and descriptors using SIFT
             k1, d1 = sift.detectAndCompute(chop1, None)
             k2, d2 = sift.detectAndCompute(chop2, None)
             k1n, d1n = sift.detectAndCompute(chop3, None)
             k2n, d2n = sift.detectAndCompute(chop4, None)
-
 
             bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
 
@@ -105,7 +99,6 @@ def match_features(imgl, imgr, imgln, imgrn):
                             break                  
                     continue
 
-
             lmatch = np.array(left_matches)
             lmatchn = np.array(left_matchesn)
             rmatch = np.array(right_matches)
@@ -125,21 +118,16 @@ def match_features(imgl, imgr, imgln, imgrn):
 
             itr += 1
 
-
-
     # shape = (n,2) where n is the number of matches
     lmatches = np.concatenate(lmatches, axis = 0)
     rmatches = np.concatenate(rmatches, axis = 0)
     lmatchesn = np.concatenate(lmatchesn, axis = 0)
     rmatchesn = np.concatenate(rmatchesn, axis = 0)
-
-
-
+    
     return lmatches, rmatches, lmatchesn, rmatchesn
 
 
-
-#helper function that adds pixels to differnt sections of an image
+# helper function that adds pixels to differnt sections of an image
 def add_pixels(itr, x,y):
     if itr is 1:
         x = x +320
@@ -152,5 +140,3 @@ def add_pixels(itr, x,y):
         x = x
 
     return [x,y]
-
-

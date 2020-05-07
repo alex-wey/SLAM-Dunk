@@ -22,7 +22,6 @@ def match_features_plot(imgl, imgr, imgln, imgrn):
     k1n, d1n = sift.detectAndCompute(gray_imgln, None)
     k2n, d2n = sift.detectAndCompute(gray_imgrn, None)
 
-
     bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
 
     #matches between imgl and imgln
@@ -31,7 +30,6 @@ def match_features_plot(imgl, imgr, imgln, imgrn):
     matches2 = bf.match(d1,d2)
     #matches between imgl and imgrn
     matches2n = bf.match(d1,d2n)
-
 
     # sorting and extracting top 50 best matches 
     matches1n = sorted(matches1n, key=lambda x: x.distance)
@@ -43,7 +41,6 @@ def match_features_plot(imgl, imgr, imgln, imgrn):
     matches2n = sorted(matches2n, key=lambda x: x.distance)
     matches2n = matches2n[:50]
     
-    
     #get the xy coordinate of the matches
     left_matches = []
     right_matches = []
@@ -52,7 +49,6 @@ def match_features_plot(imgl, imgr, imgln, imgrn):
     for match in matches1n:
         x1, y1 = k1[match.queryIdx].pt
         x1n, y1n = k1n[match.trainIdx].pt
-
 
         for match2 in matches2:
             if (match2.queryIdx == match.queryIdx):
@@ -67,7 +63,6 @@ def match_features_plot(imgl, imgr, imgln, imgrn):
                         break
                 break                  
         continue
-
 
     lmatch = np.array(left_matches)
     lmatchn = np.array(left_matchesn)

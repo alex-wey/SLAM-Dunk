@@ -8,6 +8,7 @@ from skimage.color import rgb2gray
 def match_features_plot(imgl, imgr, imgln, imgrn):
     print("Matching Features...")
 
+    # converting color images into grayscale imgaes
     gray_imgl = cv2.cvtColor(imgl, cv2.COLOR_BGR2GRAY)
     gray_imgr = cv2.cvtColor(imgr, cv2.COLOR_BGR2GRAY)
     gray_imgln = cv2.cvtColor(imgln, cv2.COLOR_BGR2GRAY)
@@ -15,6 +16,7 @@ def match_features_plot(imgl, imgr, imgln, imgrn):
 
     sift = cv2.xfeatures2d.SIFT_create()
 
+    #extracting the keypoints and descriptors using SIFT
     k1, d1 = sift.detectAndCompute(gray_imgl, None)
     k2, d2 = sift.detectAndCompute(gray_imgr, None)
     k1n, d1n = sift.detectAndCompute(gray_imgln, None)
@@ -31,6 +33,7 @@ def match_features_plot(imgl, imgr, imgln, imgrn):
     matches2n = bf.match(d1,d2n)
 
 
+    # sorting and extracting top 50 best matches 
     matches1n = sorted(matches1n, key=lambda x: x.distance)
     matches1n = matches1n[:50]
 

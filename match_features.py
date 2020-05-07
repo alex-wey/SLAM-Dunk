@@ -19,11 +19,7 @@ def match_features(imgl, imgr, imgln, imgrn):
     width1 = 240
     width2 = 320
 
-    # imgl = cv2.imread('wean_wide_interesting.left-rectified.00000600.t_001268594688.921905.png')
-    # imgr = cv2.imread('wean_wide_interesting.left-rectified.00000601.t_001268594688.992430.png')
-    # imgln = cv2.imread('wean_wide_interesting.right-rectified.00000600.t_001268594688.921905.png')
-    # imgrn = cv2.imread('wean_wide_interesting.right-rectified.00000601.t_001268594688.992430.png')
-
+    # converting color images into grayscale imgaes
     gray_imgl = cv2.cvtColor(imgl, cv2.COLOR_BGR2GRAY)
     gray_imgr = cv2.cvtColor(imgr, cv2.COLOR_BGR2GRAY)
     gray_imgln = cv2.cvtColor(imgln, cv2.COLOR_BGR2GRAY)
@@ -38,6 +34,7 @@ def match_features(imgl, imgr, imgln, imgrn):
 
     row, col = gray_imgl.shape
 
+    #dividing each image into four sections
     for i in range(0,row, width1):
         for j in range(0, col, width2):
             chop1 = gray_imgl[i : i +width1, j:j+width2]
@@ -52,6 +49,7 @@ def match_features(imgl, imgr, imgln, imgrn):
             chop4 = np.array(chop4)
 
 
+            #extracting the keypoints and descriptors using SIFT
             k1, d1 = sift.detectAndCompute(chop1, None)
             k2, d2 = sift.detectAndCompute(chop2, None)
             k1n, d1n = sift.detectAndCompute(chop3, None)
@@ -68,6 +66,7 @@ def match_features(imgl, imgr, imgln, imgrn):
                 #matches between imgl and imgrn
                 matches2n = bf.match(d1,d2n)
 
+                # sorting and extracting top 50 best matches using the distance matrix
                 matches1n = sorted(matches1n, key=lambda x: x.distance)
                 matches1n = matches1n[:50]
 
@@ -80,7 +79,7 @@ def match_features(imgl, imgr, imgln, imgrn):
                 print("No match")
                 return np.zeros((1,2)), np.zeros((1,2)), np.zeros((1,2)), np.zeros((1,2))
 
-
+            #getting the xy coordinate of the matches
             left_matches = []
             right_matches = []
             left_matchesn =[]
@@ -94,9 +93,13 @@ def match_features(imgl, imgr, imgln, imgrn):
                             for match2n in matches2n:
                                 if (match2n.queryIdx == match.queryIdx):
                                     x2n, y2n = k2n[match2n.trainIdx].pt
+                                    #matching keypoints of imgr 
                                     right_matchesn.append(add_pixels(itr, x2n, y2n))
+                                    # matching keypoints of imgl
                                     left_matches.append(add_pixels(itr, x1, y1))
+                                    #matching keypoints of imgln
                                     left_matchesn.append(add_pixels(itr, x1n, y1n))
+                                    # matching keypoints of imgrn
                                     right_matches.append(add_pixels(itr, x2, y2))
                                     break
                             break                  
@@ -108,6 +111,7 @@ def match_features(imgl, imgr, imgln, imgrn):
             rmatch = np.array(right_matches)
             rmatchn = np.array(right_matchesn) 
 
+            #getting the matches of all four sections
             if(lmatch.shape[0] != 0):
                 total_lmatches.append(lmatch)
                 total_rmatches.append(rmatch)
@@ -123,25 +127,19 @@ def match_features(imgl, imgr, imgln, imgrn):
 
 
 
-    # shape = (90,2)
+    # shape = (n,2) where n is the number of matches
     lmatches = np.concatenate(lmatches, axis = 0)
     rmatches = np.concatenate(rmatches, axis = 0)
     lmatchesn = np.concatenate(lmatchesn, axis = 0)
     rmatchesn = np.concatenate(rmatchesn, axis = 0)
 
 
-    
-    # x_range = lmatches[:,0]
-    # y_range = lmatches[:,1]
-    # fig=plt.figure()
-    # ax=fig.add_axes([0,0,1,1])
-    # ax.scatter(x_range, y_range, color='r')
-    # plt.show()
 
     return lmatches, rmatches, lmatchesn, rmatchesn
 
 
 
+#helper function that adds pixels to differnt sections of an image
 def add_pixels(itr, x,y):
     if itr is 1:
         x = x +320
